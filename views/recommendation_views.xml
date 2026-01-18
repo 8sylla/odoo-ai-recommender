@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. Vue Liste (Tree) -->
+    <record id="view_ai_recommendation_rule_tree" model="ir.ui.view">
+        <field name="name">ai.recommendation.rule.tree</field>
+        <field name="model">ai.recommendation.rule</field>
+        <field name="arch" type="xml">
+            <tree string="AI Rules" decoration-bf="confidence &gt; 0.75" decoration-info="confidence &gt; 0.5">
+                <field name="antecedent_product_id"/>
+                <field name="consequent_product_id"/>
+                <field name="support" optional="hide"/>
+                <field name="confidence" widget="percentage"/>
+                <field name="lift" optional="show"/>
+                <field name="rule_name" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 2. ACTION SERVEUR (Le Moteur) -->
+    <record id="action_run_ai_training" model="ir.actions.server">
+        <field name="name">Run AI Training</field>
+        <field name="model_id" ref="model_ai_recommendation_rule"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_generate_rules()</field>
+    </record>
+
+    <!-- 3. ACTION FENÊTRE (Pour voir la liste) -->
+    <record id="action_ai_recommendation_rules" model="ir.actions.act_window">
+        <field name="name">AI Association Rules</field>
+        <field name="res_model">ai.recommendation.rule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- 4. MENUS (L'Interface) -->
+    <menuitem id="menu_ai_root" 
+              name="Artificial Intelligence" 
+              parent="sale.sale_menu_root" 
+              sequence="100"/>
+
+    <menuitem id="menu_ai_rules" 
+              name="Association Rules" 
+              parent="menu_ai_root" 
+              action="action_ai_recommendation_rules"
+              sequence="10"/>
+
+    <menuitem id="menu_run_ai"
+              name="🔄 Run AI Training"
+              parent="menu_ai_root"
+              action="action_run_ai_training"
+              sequence="20"/>
+</odoo>

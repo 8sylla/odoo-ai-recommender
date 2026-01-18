@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_ai" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.ai</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//notebook/page[@name='order_lines']" position="after">
+                <page string="🤖 AI Suggestions" name="ai_suggestions">
+                    
+                    <div class="alert alert-info" role="alert" invisible="not ai_suggestion_ids">
+                        Here are products frequently bought with items in your cart.
+                    </div>
+
+                    <field name="ai_suggestion_ids" mode="tree">
+                        <tree string="Suggestions" create="0" delete="0" edit="0">
+                            <field name="antecedent_product_id" string="Because you bought..."/>
+                            <field name="consequent_product_id" string="You should sell..."/>
+                            <field name="confidence" widget="percentage" string="Match Chance"/>
+                            <field name="lift" optional="hide"/>
+                        </tree>
+                    </field>
+                    
+                    <div class="text-muted" invisible="ai_suggestion_ids">
+                        No suggestions yet. Add products to the cart to wake up the AI.
+                    </div>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
